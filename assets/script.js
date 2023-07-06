@@ -1,71 +1,49 @@
-function updateTime() {
-    let today = moment();
+$(document).ready(function() {
+    console.log("Ready!");
+});
+    let now = moment().format("dddd, MMMM Do YYYY");
+    let displayDate = document.getElementById("currentDay");
+    displayDate.innerHTML = now;
+    let currentHour = moment().format("HH");
 
-    $("#currentDay").text(today.format("dddd, MMMM Do YYYY, h:mm.ss"));
+    $(".time-div").each(function() {
+        var timeDiv = $(this).attr("id").split("-")[1];
 
-    let now = moment().format("kk");
-    for (let i = 0; i < scheduleElArray.length; i++) {
-        scheduleElArray[i].removeClass("future past present");
+        if (currentHour == timeDiv) {
+            $(this).addClass("present");
+            $(this).children(".description").addClass("present");
+   
+        } else if (currentHour < timeDiv) {
+            $(this).removeClass("present");
+            $(this).addClass("future");
 
-        if (now > scheduleElArray[i].data("hour")) {
-            scheduleElArray[i].addClass("past");
-
-        } else if (now === scheduleElArray[i].attr("data-hour")) {
-            scheduleElArray[i].addClass("present");
-
-        } else {
-
-            scheduleElArray[i].addClass("future");
+        } else if (currentHour > timeDiv) {
+            $(this).removeClass("future");
+            $(this).addClass("past");
         }
-    }
-}
+    });
 
-let saveBttn = $("a.save-icon");
-let containerEl = $(".container");
-let schedule9am = $("#9AM");
-let schedule10am = $("#10AM");
-let schedule11am = $("#11AM");
-let schedule12pm = $("#12PM");
-let schedule1pm = $("#1PM");
-let schedule2pm = $("#2PM");
-let schedule3pm = $("#3PM");
-let schedule4pm = $("#4PM");
-let schedule5pm = $("#5PM");
+    $(".saveBtn").click(function (event) {
+        event.preventDefault();
+        var value = $(this).siblings(".time-block").val();
+        var time = $(this).parent().attr("id").split("-")[1];
+        localStorage.setItem(time,value);
+    });
 
-let scheduleElArray = [
-    schedule9am,
-    schedule10am,
-    schedule11am,
-    schedule12pm,
-    schedule1pm,
-    schedule2pm,
-    schedule3pm,
-    schedule4pm,
-    schedule5pm,
-];
+    //Retrieve data from local storage 
+    $("#hour-09 .time-block").val(localStorage.getItem("09"));
+    $("#hour-10 .time-block").val(localStorage.getItem("10"));
+    $("#hour-11 .time-block").val(localStorage.getItem("11"));
+    $("#hour-12 .time-block").val(localStorage.getItem("12"));
+    $("#hour-13 .time-block").val(localStorage.getItem("13"));
+    $("#hour-14 .time-block").val(localStorage.getItem("14"));
+    $("#hour-15 .time-block").val(localStorage.getItem("15"));
+    $("#hour-16 .time-block").val(localStorage.getItem("16"));
+    $("#hour-17 .time-block").val(localStorage.getItem("17"));
 
-renderLastRegistered();
-updateTime();
-setInterval(updateTime, 1000); 
-
-function renderLastRegistered() {
-    for (let el of scheduleElArray) {
-        el.val(localStorage.getItem("time block " + el.data("hour")));
-
-    }
-}
-
-
-function handleFormSubmit(event) {
-    event.preventDefault();
-
-    let btnClicked = $(event.currentTarget);
-
-    let targetText = btnClicked.siblings("textarea");
- 
-    let targetTimeBlock = targetText.data("hour");
-
-    localStorage.setItem("time block " +  targetTimeBlock, targetText.val());
-}
-
-saveBttn.on("click", handleFormSubmit);
+     
+     $("#clearFieldsBtn").click(function(event) {
+        event.preventDefault;
+        $("textArea").val("");
+        localStorage.clear();
+    });
