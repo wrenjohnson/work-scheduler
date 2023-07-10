@@ -63,13 +63,13 @@ textarea {
 }
 
 .present {
-  background-color: #ff6961;
+  background-color: #f0a7d0;
   color: white;
   border-radius: 15px;
 }
 
 .future {
-  background-color: #77dd77;
+  background-color: #beffbe;
   color: white;
   border-radius: 15px;
 }
